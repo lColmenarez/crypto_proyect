@@ -1,3 +1,5 @@
 .env
 develop/
 .vscode/
+.*
+*.csv
