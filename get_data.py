@@ -15,7 +15,6 @@ parser = argparse.ArgumentParser(description='Script para generar CSVs de una li
 parser.add_argument('--crypto', '-c', help='pide una lista de cryptos, ej: "[\'BTCUSDT\',\'ADAUSDT\']"')
 parser.add_argument('--timeframe', '-t', default='1d', help='TimeFrame del Query, solo acepta 1h ,4h y 1d', type=str)
 
-
 def binance_price_to_csv(ticker):
     """This function stablish a connection to binance, get the historial data from
          3 posibles timeframes,
