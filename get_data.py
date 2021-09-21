@@ -5,6 +5,7 @@ import sys
 import argparse
 from tabulate import tabulate
 from decouple import config
+import yfinance as yf
 
 # import API keys from .env
 API_KEY_B = config('API_KEY_B')
@@ -13,7 +14,11 @@ SECRET_KEY_B = config('SECRET_KEY_B')
 #Use argparse to optimize the data input from the command line
 parser = argparse.ArgumentParser(description='Script para generar CSVs de una lista de valores de cryptos en un timeframe definido')
 parser.add_argument('--crypto', '-c', help='pide una lista de cryptos, ej: "[\'BTCUSDT\',\'ADAUSDT\']"')
+parser.add_argument('--stocks', '-s', help='pide una stock')
+#parser.add_argument('--history', '-i', help='toda la data almacenada del to')
 parser.add_argument('--timeframe', '-t', default='1d', help='TimeFrame del Query, solo acepta 1h ,4h y 1d', type=str)
+parser.add_argument('--startdate', '-st', default='2017-01-01', help='Start date of the query', type=str)
+parser.add_argument('--enddate', '-et', default='2021-09-19', help='End date of the query', type=str)
 
 def binance_price_to_csv(ticker):
     """This function stablish a connection to binance, get the historial data from
@@ -48,13 +53,19 @@ def binance_price_to_csv(ticker):
     final_dataframe.reset_index(inplace=True)
     return final_dataframe, csv
 
+def yfinance_hist(ticker):
+    stock = yf.Ticker(ticker)
+    hist_stock = stock.history(period='max')
+    hist_stock.reset_index(inplace=True)
+    csv_n = ticker + '.csv'
+    csv = hist_stock.to_csv(csv_n)
+    return hist_stock, csv
+
 if __name__== "__main__":
     args = parser.parse_args()
-    if (len(sys.argv) == 3 or len(sys.argv) == 5):
-
+    if args.crypto:
         cryptos = args.crypto.replace('[', ' ').replace(']', ' ').replace(',', ' ').replace("'",'').split()
         time_interval = args.timeframe
-
         for j,i in enumerate(cryptos):
             crypto_item = binance_price_to_csv(i)[0]
             crypto_item['name'] = i
@@ -73,6 +84,11 @@ if __name__== "__main__":
             df.to_csv(csv_name, index=False)
         else: 
             df_final.to_csv(csv_name, index=False)
-        end = dt.now()    
+    elif args.stocks:
+        st = args.stocks.replace('[','').replace(']','').replace("'",'')
+        st1, csv = yfinance_hist(st)
+        st1['name'] = st
+        print(tabulate(st1.head(), headers=st1.columns, tablefmt='psql', showindex=False, numalign='center', floatfmt='.4f'))
+        st1.to_csv(csv, index=False)
     else:
         print('En caso de tener problemas usa el parametro "-h" para obtener ayuda')
