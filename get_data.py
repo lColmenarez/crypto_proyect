@@ -57,6 +57,7 @@ def yfinance_hist(ticker):
     stock = yf.Ticker(ticker)
     hist_stock = stock.history(period='max')
     hist_stock.reset_index(inplace=True)
+    hist_stock['name'] = ticker
     csv_n = ticker + '.csv'
     csv = hist_stock.to_csv(csv_n)
     return hist_stock, csv
@@ -87,7 +88,6 @@ if __name__== "__main__":
     elif args.stocks:
         st = args.stocks.replace('[','').replace(']','').replace("'",'')
         st1, csv = yfinance_hist(st)
-        st1['name'] = st
         print(tabulate(st1.head(), headers=st1.columns, tablefmt='psql', showindex=False, numalign='center', floatfmt='.4f'))
         st1.to_csv(csv, index=False)
     else:
