@@ -24,3 +24,9 @@ CREATE TABLE IF NOT EXISTS stock_price (
     volume INT NOT NULL,
     FOREIGN KEY (stock_id) REFERENCES stock (id)
 );
+
+-- Insert the Stocks companies on the Stock table
+INSERT INTO stock (id, symbol, company) VALUES (1, 'AAPL', 'Apple Inc.');
+INSERT INTO stock (id, symbol, company) VALUES (2, 'MSFT', 'Microsoft Corporation');
+INSERT INTO stock (id, symbol, company) VALUES (3, 'CAT', 'Caterpillar Inc.');
+INSERT INTO stock (id, symbol, company) VALUES (4, 'BABA', 'Alibaba Group Holding Limited');
