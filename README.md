@@ -1,1 +1,3 @@
-# Project dedicated to get crypto and stocks data
+# <b>Crypto project</b>
+
+** Under Develop **
